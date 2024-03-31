@@ -1,0 +1,194 @@
+﻿@using WebApp.Models.ViewModels;
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+<h4>@ViewData["Title"]</h4>
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+<div class="row">
+    <div class="col-6">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" autocomplete="username" aria-required="true">
+
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" autocomplete="username" aria-required="true">
+
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" readonly />
+                <a asp-action="ChangePassword" class="btn btn-link">Change password</a>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" />
+                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="Email" class="form-control" />
+                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                }
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+         
+             <div class="row">
+                <div class="form-group col-6">
+                    <div class="form-group">
+                        <label asp-for="Birthday"></label>
+                        <div class="input-group date" id="startD" width="100%">
+                            <input type="text" readonly asp-for="Birthday" value="@Model.Birthday.ToShortDateString()" id="birthdate" class="form-control help-sidebar" />
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i id="sCalendar" class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group col-6">
+                    <label asp-for="Gender"></label>
+                    <select class="form-select" asp-for="Gender" asp-items="@ViewBag.Gender">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6 mb-3">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" type="text" class="form-control" placeholder="Address" autocomplete="username" aria-required="true">
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+           
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <div class="col-6">
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-primary text-light ml-0">
+                    <div class="row">
+                        <div class="col-6  pt-2">
+                            Favorites
+                        </div>
+                        <div class="col-6 text-end">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light btn-sm">Go to All Products</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    @if (Model.Products.Count() < 1)
+                    {
+                        <h5>There are no products.</h5>
+                    }
+                    else
+                    {
+
+
+                        @foreach (var item in Model.Products)
+                        {
+                            <div class="row">
+                                <div class="d-none d-lg-block col-lg-2 text-center py-2">
+                                    <img src="@item.ImageUrl" class="rounded" width="100%" />
+                                </div>
+                                <div class="col-12 col-lg-8 pt-md-3">
+                                    <h5><strong>@item.Title</strong></h5>
+                                    <p><small>@Html.Raw(item.Description)</small></p>
+                                </div>
+                                <div class="col-12  col-lg-1 text-center row">
+                                    <div class="col-2 col-sm-4 col-lg-2 text-right pt-2">
+                                        <a onClick=removeFavorite(@item.Id) class="btn btn-danger">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>*
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        function removeFavorite(id) {
+            var urll = "@Url.Action("Index", "ManageProfile")";
+            console.log(urll);
+            $.ajax({
+                url: "@Url.Action("RemoveFromFavorite", "Home")",
+                type: 'GET',
+                data: { productId: id },
+                success: function (data) {
+                    console.log(data)
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'You just removed this prodsuct from favorites!'
+                        }).then((result) => {
+
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            text: data.message
+                        })
+
+                    }
+                }
+            })
+
+        }
+        $(document).ready(function () {
+            // Date range picker
+            $('#birthdate').datepicker({
+                format: 'dd/mm/yyyy',
+                pickTime: false,
+                autoclose: true,
+                startView: 'month',
+                orientation: "bottom"
+            });
+
+
+            $('#sCalendar').on('click', function () {
+                $('#birthdatePicker').trigger('focus');
+            });
+        })
+
+    </script>
+}

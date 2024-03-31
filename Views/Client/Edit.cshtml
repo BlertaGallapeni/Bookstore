@@ -1,0 +1,115 @@
+﻿@using WebApp.Models.ViewModels;
+@model ApplicationUserVM
+@{
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+    ViewData["Title"] = "Edit Client";
+}
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+
+        <p class="login-box-msg">Edit informations of Client</p>
+        <div asp-validation-summary="All" class="text-danger mt-2"></div>
+        <form asp-controller="Client" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="input-group mb-3">
+                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    </div>
+                </div>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    </div>
+                </div>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <input readonly asp-for="Email" type="email" class="form-control" placeholder="Email" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group">
+                    <div class="input-group date" id="startD" width="100%">
+                    <input type="text" asp-for="Birthday" value="@Model.Birthday.ToShortDateString()" readonly id="birthdatePicker" class="form-control help-sidebar" />
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i id="sCalendar" class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <select asp-for="Gender" asp-items="@ViewBag.Gender" class="form-control">
+                    @*<option disabled selected>--Select Gender--</option>*@
+                </select>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <span class="fas fa-select"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-phone"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="Address" type="text" class="form-control" placeholder="Address" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-location"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="my-3">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+            </div>
+            <div class="my-3">
+                <a class="btn btn-dark btn-block" asp-controller="Client" asp-action="Index">Back to List</a>
+            </div>
+        </form>
+
+              
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+            $(document).ready(function () {
+                      // Date range picker
+            $('#birthdatePicker').datepicker({
+                    format: 'dd/mm/yyyy',
+                    pickTime: false,
+                    autoclose: true,
+                    startView: 'month',
+                    orientation: "bottom"
+                });
+
+
+                $('#sCalendar').on('click', function () {
+                    $('#birthdatePicker').trigger('focus');
+                });
+            })
+    
+    </script>
+ 

@@ -1,0 +1,27 @@
+﻿@using WebApp.Models.ViewModels;
+@model List<ApplicationUser>
+@{
+    Layout = "_Layout";
+	ViewData["Title"] = "Clients";
+}
+
+<h3 class="my-4">Clients List</h3>
+
+<table id="tblData" class="table table-bordered table-striped">
+    <thead>
+     <tr>
+        <th> First Name </th>
+        <th> Last Name </th>
+  @*      <th> Birthdate </th>*@
+        <th> Email </th>
+        <th> Phone Number </th>
+        <th> Address </th>
+        <th> Actions </th>
+    </tr>
+   </thead>
+</table>
+
+
+@section Scripts{
+    <script src="~/js/clients.js"></script>
+}

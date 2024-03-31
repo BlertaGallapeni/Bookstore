@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using WebApp.Models.ViewModels;
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+    ViewData["Title"] = "Log in";
+}
+        <p class="login-box-msg">Sign in to Start</p>
+        <div asp-validation-summary="All" class="text-danger mt-2"></div>
+        <form asp-route-returnurl="@ViewData["ReturnUrl"]" id="account" method="post">
+            <div class="input-group mb-3">
+                <input asp-for="Email" type="email" class="form-control" placeholder="Email" autocomplete="username" aria-required="true">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="justify-content-right">
+                <div class="co">
+                    <div class="icheck-primary">
+                        <input type="checkbox" asp-for="RememberMe">
+                        <label asp-for="RememberMe" for="remember" style="font-weight:100;align-content:right">
+                            Remember Me
+                        </label>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="my-3">
+                <button id="login-submit" type="submit" class="btn btn-info btn-block">Log In</button>
+            </div>
+        </form>
+
+        <div class="text-center">
+            <div class="my-3">
+                <a class="btn btn-dark btn-block" id="register" asp-controller="Account" asp-action="Register">Register</a>
+            </div>
+
+            <div class="icheck-primary text-black">
+                <a asp-action="ForgotPassword" class="text-black">I forgot my Password!</a>
+            </div>
+        </div>
+        <!-- /.social-auth-links -->
+
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
